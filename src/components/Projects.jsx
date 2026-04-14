@@ -23,15 +23,6 @@ const PROJECTS = [
     tech: ['React', 'Three.js', 'GSAP', 'WebGL'],
     colorHex: '#ff0055', // Hot synthwave pink
     colorRgb: '255, 0, 85'
-  },
-  {
-    id: 3,
-    name: 'Algoclash.in',
-    url: 'https://algoclash.in',
-    desc: 'A competitive programming platform offering real-time coding battles and algorithm challenges.',
-    tech: ['Next.js', 'Node.js', 'WebSockets', 'Python'],
-    colorHex: '#6dedf0', // Cool cyan
-    colorRgb: '109, 237, 240'
   }
 ]
 
@@ -115,7 +106,6 @@ export default function Projects() {
   const wheelRef = useRef(null)
   const card1Ref = useRef(null)
   const card2Ref = useRef(null)
-  const card3Ref = useRef(null)
 
   // Use 1.2s scrub for smoother high-performance scrolling
   useEffect(() => {
@@ -124,20 +114,19 @@ export default function Projects() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
-          end: '+=400%', // Reduced from 800% to 400% for faster transitions
+          end: '+=200%', // Reduced from 400% to 200% since we only have 2 cards now
           pin: true,
           scrub: 1,      // Snappier scrub
           onUpdate: (self) => {
             const prog = self.progress
-            if (prog < 0.33) setActiveIndex(0)
-            else if (prog < 0.66) setActiveIndex(1)
-            else setActiveIndex(2)
+            if (prog < 0.5) setActiveIndex(0)
+            else setActiveIndex(1)
           }
         }
       })
 
       // Ensure all cards are pre-set to avoid layout jumps
-      gsap.set([card2Ref.current, card3Ref.current], { opacity: 0, y: '100%', z: 800 })
+      gsap.set([card2Ref.current], { opacity: 0, y: '100%', z: 800 })
 
       // --- STAGE 1: CARD 1 SWAP ---
       // CARD 1 -> EXIT (Ingredio)
@@ -151,7 +140,7 @@ export default function Projects() {
       
       // SYNC TITLE 1 -> 2
       tl.to(wheelRef.current, {
-        yPercent: -33.33,
+        yPercent: -50,
         ease: 'power3.inOut' // Switched to power3 for smoother easing
       }, 0.5)
 
@@ -160,29 +149,6 @@ export default function Projects() {
         { y: '100%', z: 800, rotationX: 10, opacity: 0 },
         { y: 0, z: 0, rotationX: 0, opacity: 1, ease: 'power3.inOut' },
         0.5
-      )
-
-      // --- STAGE 2: CARD 2 SWAP ---
-      // CARD 2 -> EXIT
-      tl.to(card2Ref.current, {
-        y: '-100%',
-        z: -800,
-        rotationX: -10,
-        opacity: 0,
-        ease: 'power3.inOut' // Removed blur
-      }, 1.5)
-
-      // SYNC TITLE 2 -> 3
-      tl.to(wheelRef.current, {
-        yPercent: -66.66,
-        ease: 'power3.inOut'
-      }, 1.5)
-
-      // CARD 3 -> ENTER (Algoclash)
-      tl.fromTo(card3Ref.current, 
-        { y: '100%', z: 800, rotationX: 10, opacity: 0 },
-        { y: 0, z: 0, rotationX: 0, opacity: 1, ease: 'power3.inOut' },
-        1.5
       )
 
       // Buffer at the end reduced to allow smoother scrolling out of the section
@@ -202,7 +168,6 @@ export default function Projects() {
           <div ref={wheelRef} className={styles.wheelTrack}>
             <div className={styles.wheelItem}>INGREDIO</div>
             <div className={styles.wheelItem}>SYNTROX.IO</div>
-            <div className={styles.wheelItem}>ALGOCLASH.IN</div>
           </div>
         </div>
       </div>
@@ -213,9 +178,6 @@ export default function Projects() {
         </div>
         <div className={styles.cardContainerWrapper} style={{ zIndex: activeIndex === 1 ? 5 : 3 }}>
           <ProjectCard project={PROJECTS[1]} index={1} cardRefProxy={card2Ref} isActive={activeIndex === 1} />
-        </div>
-        <div className={styles.cardContainerWrapper} style={{ zIndex: activeIndex === 2 ? 5 : 4 }}>
-          <ProjectCard project={PROJECTS[2]} index={2} cardRefProxy={card3Ref} isActive={activeIndex === 2} />
         </div>
       </div>
     </section>
