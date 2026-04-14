@@ -1,0 +1,21 @@
+            const charInfo=chars[i];
+
+            // --- RED/WHITE + TRUE COLOR FLASHLIGHT LOGIC HERE ---
+            const lightDist = Math.sqrt((particle.x - mouseX)**2 + (particle.y - mouseY)**2);
+            const radius = 250; 
+            
+            if (lightDist < radius) {
+                // True color
+                ctx.fillStyle = charInfo.color;
+            } else {
+                // Determine red/white mapping
+                ctx.fillStyle = charInfo.rwColor;
+            }
+            
+            ctx.fillText(charInfo.char,particle.x,particle.y)
+}requestAnimationFrame(animate)}container.addEventListener("mousemove",function(e){const rect=canvas.getBoundingClientRect();mouseX=e.clientX - rect.left;mouseY=e.clientY - rect.top;lastMouseMoveTime=Date.now()});container.addEventListener("mouseleave",function(){mouseX=-1000;mouseY=-1000});function initializeAscii(){if((sourceMedia.complete || isVideo)&&(isVideo ? sourceMedia.readyState >=2:true)){updateCanvasSize();generateAsciiArt();isAnimating=true;animate();if(isVideo)sourceMedia.play()}else{sourceMedia.onload=function(){updateCanvasSize();generateAsciiArt();isAnimating=true;animate()};if(isVideo){sourceMedia.onloadeddata=function(){updateCanvasSize();generateAsciiArt();isAnimating=true;animate();sourceMedia.play()}}}}initializeAscii()
+    
+    const resizeHandler = () => { chars = []; generateAsciiArt(); };
+    window.addEventListener('resize', resizeHandler);
+    
+    return () => {

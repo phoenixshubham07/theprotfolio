@@ -1,0 +1,3 @@
+                        const rwColor = `rgb(255, ${Math.floor(brightness)}, ${Math.floor(brightness)})`;
+                            chars[charIdx].rwColor=rwColor;
+                ctx.fillStyle = charInfo.rwColor;

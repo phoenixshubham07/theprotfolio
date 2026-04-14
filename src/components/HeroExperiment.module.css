@@ -1,0 +1,40 @@
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000; /* You can experiment with different background colors/styles here */
+}
+
+/* ── Hero name ── */
+.name {
+  position: absolute;
+  bottom: 28px;
+  left: 22px;
+  width: calc(100vw - 44px);
+  font-family: 'Inter', sans-serif;
+  font-size: 16vw; /* overridden by JS */
+  font-weight: 300;
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  opacity: 0.78;
+  mix-blend-mode: screen;
+  user-select: none;
+  will-change: font-size;
+}
+
+.first { 
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0;
+}
+
+.last { 
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-style: normal; 
+  letter-spacing: -0.02em;
+}

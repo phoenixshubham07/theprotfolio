@@ -1,0 +1,322 @@
+.section {
+  position: relative;
+  width: 100%;
+  background: #080000;
+  padding: 100px 0 150px;
+  z-index: 10;
+  color: #fff;
+  overflow: hidden;
+}
+
+.header {
+  padding: 0 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  margin-bottom: 80px;
+}
+
+.sectionTitle {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.sectionPinned {
+  position: relative;
+  width: 100%;
+  height: 100vh; /* Fill exactly one screen */
+  background: #080000;
+  z-index: 10;
+  color: #fff;
+  overflow: hidden;
+}
+
+.projectsListPinned {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 2000px; /* Crucial for intense 3D effect */
+  pointer-events: none; /* Let clicks pass down to children */
+}
+
+.cardContainerWrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+/* --- THE WHEEL OVERLAY --- */
+.wheelOverlay {
+  position: absolute;
+  top: 0; /* Align with top of section */
+  left: 0;
+  width: 100%;
+  height: 35vh; /* Larger area for big font */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.wheelViewport {
+  height: 250px; /* Restored original height */
+  overflow: hidden;
+}
+
+.wheelTrack {
+  display: flex;
+  flex-direction: column;
+}
+
+.wheelItem {
+  height: 250px; /* Restored original height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(80px, 12vw, 200px); /* Restored original massive size */
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: #fff;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.projectWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1300px;
+  height: 600px; /* Slightly shorter cards to fit better */
+  margin: 0 auto;
+  margin-top: 15vh; /* Pushed card down away from title */
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The actual 3D Card */
+.card3d {
+  width: 90%;
+  height: 100%;
+  position: relative;
+  border-radius: 12px;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.8),
+              0 0 0 1px rgba(255,255,255,0.1);
+  background: #111;
+  overflow: hidden;
+  will-change: transform;
+  transform-style: preserve-3d;
+  transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1), transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex;
+}
+
+/* Hovering on the wrapper triggers the card to shrink/slide left */
+.projectWrapper:hover .card3d {
+  width: 90%;
+}
+
+.projectWrapper:hover .previewContainer {
+  width: 100%;
+}
+
+/* If user clicked to interact, remove all hover 3D states */
+.card3d.interactiveMode {
+  width: 100% !important;
+  transform: rotateX(0) rotateY(0) translateZ(0) !important;
+  box-shadow: 0 0 0 1px rgba(89, 218, 255, 0.5); /* Glowing cyan border to show it's active */
+  transition: width 0.5s, box-shadow 0.3s;
+}
+.card3d.interactiveMode .previewContainer {
+  width: 100%; /* Go full screen inside the wrapper */
+}
+.card3d.interactiveMode .detailsPanel {
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+.card3d.interactiveMode .closeInteraction {
+  display: block; /* We probably need to position this floating over the iframe */
+}
+
+/* Outer Custom Cursor */
+.customCursor {
+  position: fixed;
+  top: 0; left: 0;
+  transform: translate(-50%, -50%) scale(0);
+  background: #6dedf0;
+  color: #000;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 12px 24px;
+  border-radius: 40px;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0;
+  white-space: nowrap;
+  box-shadow: 0 10px 30px rgba(109, 237, 240, 0.3);
+}
+
+/* Preview Iframe Container */
+.previewContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: #000;
+  border-right: 1px solid rgba(255,255,255,0.05);
+  transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex;
+  flex-direction: column;
+  z-index: 2; /* keep in front of sliding details */
+}
+
+.interactionOverlay {
+  position: absolute;
+  top: 0; left: 0; 
+  width: 100%; height: 100%;
+  z-index: 5;
+  cursor: pointer; /* Simplified standard cursor */
+}
+
+.browserHeader {
+  height: 40px;
+  background: #1a1a1a;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+}
+
+.browserDots {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff5f56;
+  box-shadow: 16px 0 0 #ffbd2e, 32px 0 0 #27c93f;
+  margin-right: 24px;
+}
+
+.browserUrl {
+  font-family: monospace;
+  font-size: 11px;
+  color: #888;
+  background: #0a0a0a;
+  padding: 4px 16px;
+  border-radius: 4px;
+  flex: 1;
+  text-align: center;
+}
+
+.iframe {
+  flex: 1;
+  width: 100%;
+  border: none;
+  background: #fff; /* fallback color if the site doesn't set body bg */
+  scrollbar-width: none; /* Firefox */
+}
+
+.iframe::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+/* Details Panel that slides out */
+.detailsPanel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 35%;
+  height: 100%;
+  background: #111;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transform: translateX(20%);
+  opacity: 0;
+  transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: 1;
+}
+
+.detailsContent {
+  transform: translateZ(50px); /* 3D pop out towards viewer */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.projectTitle {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(24px, 3vw, 42px);
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.projectDesc {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #aaa;
+  margin: 0;
+}
+
+.techTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.tag {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 6px 12px;
+  border-radius: 40px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #ccc;
+}
+
+.closeInteraction {
+  display: none; /* only shows when interactive - managed in code via state */
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.closeInteraction:hover {
+  transform: scale(1.05);
+  background: #ddd;
+}

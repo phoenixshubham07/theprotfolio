@@ -1,0 +1,142 @@
+.hero {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Background — GSAP blurs this on scroll */
+.bg {
+  position: absolute;
+  inset: 0;
+  /* changed to solid black per your request */
+  background-color: #000;
+  /* background-image: url('/bg.jpg'); */
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  will-change: filter, transform;
+  transform-origin: center;
+}
+
+.bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.12) 0%,
+    transparent      38%,
+    transparent      55%,
+    rgba(0,0,0,0.5)  100%
+  );
+}
+
+/* Content — GSAP fades this on scroll */
+.content {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  will-change: opacity, transform;
+}
+
+/* ── Tagline ── */
+.tagline {
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+  line-height: 1.6;
+}
+.tagline span {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 34px; /* Increased from 27px */
+  font-weight: 400;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: 0.01em;
+}
+.tagline em {
+  font-style: italic;
+  font-weight: 300;
+}
+
+/* ── Bottom bar ── */
+.bar {
+  position: absolute;
+  bottom: 28px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 22px;
+}
+
+.location {
+  flex: 1;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.85);
+}
+
+.socials {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+.socials a {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.socials a:hover { opacity: 0.5; }
+.sep {
+  color: rgba(255,255,255,0.3);
+  margin: 0 11px;
+}
+.accent { color: #6dedf0; }
+
+.spacer { flex: 1; }
+
+/* ── Hero name ── */
+.name {
+  position: absolute;
+  bottom: 28px;
+  left: 22px;
+  width: calc(100vw - 44px);
+  font-family: 'Inter', sans-serif; /* Setup base font instead of Cormorant */
+  font-size: 16vw; /* overridden by JS */
+  font-weight: 300;
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  opacity: 0.78;
+  mix-blend-mode: screen;
+  user-select: none;
+  will-change: font-size;
+}
+.first { 
+  font-family: 'Instrument Serif', serif; /* Ultra high-end modern display serif */
+  font-weight: 400;
+  font-style: italic; /* Smooth, elegant sweeping curves without looking like a default italic */
+  letter-spacing: 0;
+}
+.last { 
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-style: normal; 
+  letter-spacing: -0.02em; /* Smooth letter spacing, no italics */
+}
