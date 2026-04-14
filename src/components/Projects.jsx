@@ -38,8 +38,8 @@ const PROJECTS = [
 function ProjectCard({ project, index, cardRefProxy, isActive }) {
   const cardRef = useRef(null)
   
-  // Algoclash.in (ID 3) should load immediately; others lazy-load on scroll
-  const shouldEagerLoad = project.id === 3
+  // Lazy-load all iframes on scroll to avoid heavy background processing lag
+  const shouldEagerLoad = false
   const [hasLoaded, setHasLoaded] = useState(shouldEagerLoad)
 
   // Once active, we trigger the load. We never "unload" to keep the session alive.
@@ -185,8 +185,8 @@ export default function Projects() {
         1.5
       )
 
-      // Buffer at the end to prevent immediate snapping out
-      tl.to({}, { duration: 1.0 }) 
+      // Buffer at the end reduced to allow smoother scrolling out of the section
+      tl.to({}, { duration: 0.2 }) 
       
     }, sectionRef)
     
