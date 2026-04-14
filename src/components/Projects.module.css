@@ -52,7 +52,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: auto;
+  pointer-events: none; /* Let events pass through the full-screen wrapper */
 }
 
 /* --- THE WHEEL OVERLAY --- */
@@ -105,6 +105,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: auto; /* Only catch events directly on the card wrapper */
 }
 
 /* The actual 3D Card */
@@ -125,11 +126,11 @@
 
 /* Hovering on the wrapper triggers the card to shrink/slide left */
 .projectWrapper:hover .card3d {
-  width: 90%;
+  /* Removed to keep card size stable */
 }
 
 .projectWrapper:hover .previewContainer {
-  width: 100%;
+  /* Removed to keep preview width stable */
 }
 
 /* If user clicked to interact, remove all hover 3D states */
@@ -151,25 +152,37 @@
   display: block; /* We probably need to position this floating over the iframe */
 }
 
-/* Outer Custom Cursor */
-.customCursor {
-  position: fixed;
-  top: 0; left: 0;
-  transform: translate(-50%, -50%) scale(0);
-  background: #6dedf0;
-  color: #000;
+/* Hover Hint that appears on the right edge */
+.hoverHint {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%) translateX(20px);
+  padding: 16px 32px 16px 150px; /* Gradient fade out space */
   font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 12px 24px;
-  border-radius: 40px;
-  pointer-events: none;
-  z-index: 1000;
+  z-index: 10;
   opacity: 0;
-  white-space: nowrap;
-  box-shadow: 0 10px 30px rgba(109, 237, 240, 0.3);
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.8) 30%, #000 100%);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.hoverHint span {
+  margin-left: 8px;
+  font-size: 18px;
+  transform: translateY(-1px);
+}
+
+.card3d:hover .hoverHint {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
 }
 
 /* Preview Iframe Container */
@@ -179,7 +192,6 @@
   position: relative;
   background: #000;
   border-right: 1px solid rgba(255,255,255,0.05);
-  transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1);
   display: flex;
   flex-direction: column;
   z-index: 2; /* keep in front of sliding details */
@@ -190,7 +202,7 @@
   top: 0; left: 0; 
   width: 100%; height: 100%;
   z-index: 5;
-  cursor: pointer; /* Simplified standard cursor */
+  cursor: pointer; /* Normal pointer instead of hiding */
 }
 
 .browserHeader {
@@ -263,30 +275,7 @@
   display: none; /* Chrome, Safari, and Opera */
 }
 
-/* Details Panel that slides out */
-.detailsPanel {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 35%;
-  height: 100%;
-  background: #111;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  transform: translateX(20%);
-  opacity: 0;
-  transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1);
-  z-index: 1;
-}
 
-.detailsContent {
-  transform: translateZ(50px); /* 3D pop out towards viewer */
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
 
 .projectTitle {
   font-family: 'Inter', sans-serif;

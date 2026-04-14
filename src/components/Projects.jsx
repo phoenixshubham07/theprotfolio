@@ -11,21 +11,27 @@ const PROJECTS = [
     name: 'Ingredio',
     url: 'https://phxshubham-ingredio.hf.space/',
     desc: 'An AI-driven ingredient analyzer providing transparent insights into food and cosmetic products.',
-    tech: ['React', 'Python', 'ML', 'HuggingFace']
+    tech: ['React', 'Python', 'ML', 'HuggingFace'],
+    colorHex: '#39ff14', // Vibrant neon green
+    colorRgb: '57, 255, 20'
   },
   {
     id: 2,
     name: 'Syntrox.io',
     url: 'https://syntrox.io',
     desc: 'An interactive 3D web experience focusing on innovative design and seamless navigation.',
-    tech: ['React', 'Three.js', 'GSAP', 'WebGL']
+    tech: ['React', 'Three.js', 'GSAP', 'WebGL'],
+    colorHex: '#ff0055', // Hot synthwave pink
+    colorRgb: '255, 0, 85'
   },
   {
     id: 3,
     name: 'Algoclash.in',
     url: 'https://algoclash.in',
     desc: 'A competitive programming platform offering real-time coding battles and algorithm challenges.',
-    tech: ['Next.js', 'Node.js', 'WebSockets', 'Python']
+    tech: ['Next.js', 'Node.js', 'WebSockets', 'Python'],
+    colorHex: '#6dedf0', // Cool cyan
+    colorRgb: '109, 237, 240'
   }
 ]
 
@@ -35,7 +41,6 @@ function ProjectCard({ project, index, cardRefProxy, isActive }) {
   // Algoclash.in (ID 3) should load immediately; others lazy-load on scroll
   const shouldEagerLoad = project.id === 3
   const [hasLoaded, setHasLoaded] = useState(shouldEagerLoad)
-  const [isInteractive, setIsInteractive] = useState(false)
 
   // Once active, we trigger the load. We never "unload" to keep the session alive.
   useEffect(() => {
@@ -49,62 +54,25 @@ function ProjectCard({ project, index, cardRefProxy, isActive }) {
     if (cardRefProxy) cardRefProxy.current = cardRef.current
   }, [cardRefProxy])
 
-  // 3D Parallax Hover Effect
-  const handleMouseMove = (e) => {
-    if (!cardRef.current || isInteractive) return
-
-    const { left, top, width, height } = cardRef.current.getBoundingClientRect()
-    const x = e.clientX - left
-    const y = e.clientY - top
-    
-    // Calculate rotation limits (-6 to 6 degrees for smoother feel)
-    const rotateX = ((y / height) - 0.5) * -12
-    const rotateY = ((x / width) - 0.5) * 12
-
-    gsap.to(cardRef.current, {
-      rotateX,
-      rotateY,
-      duration: 0.8, // Increased duration for smoother high-refresh rate tracking
-      ease: 'power2.out',
-      transformPerspective: 1500, // Slightly subtler perspective
-      overwrite: 'auto' // Crucial to prevent animation stacking lag
-    })
-  }
-
-  const handleMouseEnter = () => {
-    // No-op
-  }
-
-  const handleMouseLeave = () => {
-    if (isInteractive) return
-    // Reset rotations with a longer, smoother cubic ease
-    gsap.to(cardRef.current, {
-      rotateX: 0,
-      rotateY: 0,
-      duration: 1.2,
-      ease: 'power3.out',
-      overwrite: 'auto'
-    })
-  }
-
-  // Click to interact with the iframe
-  const enableInteraction = () => {
-    setIsInteractive(true)
-    // Reset 3D tilt
-    gsap.to(cardRef.current, { rotateX: 0, rotateY: 0, duration: 0.5 })
+  // Click to redirect
+  const handleClick = () => {
+    window.open(project.url, '_blank', 'noopener,noreferrer')
   }
 
   return (
     <div className={styles.projectWrapper}>
       
-      {/* Main 3D Card Area */}
+      {/* Main Card Area */}
       <div 
         ref={cardRef}
-        className={`${styles.card3d} ${isInteractive ? styles.interactiveMode : ''}`}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        className={styles.card3d}
+        onClick={handleClick}
       >
+        
+        {/* Right-side Hover Hint */}
+        <div className={styles.hoverHint} style={{ color: project.colorHex }}>
+          Click to visit the site <span>→</span>
+        </div>
         
         {/* Iframe Preview Container */}
         <div className={styles.previewContainer}>
@@ -117,7 +85,7 @@ function ProjectCard({ project, index, cardRefProxy, isActive }) {
             <iframe 
               src={project.url}
               className={`${styles.iframe} ${hasLoaded ? styles.iframeLoaded : ''}`}
-              style={{ pointerEvents: isInteractive ? 'auto' : 'none' }}
+              style={{ pointerEvents: 'none' }} /* Ensure clicks go to the wrapper */
               tabIndex={-1}
               title={`${project.name} Live Preview`}
             />
@@ -126,10 +94,9 @@ function ProjectCard({ project, index, cardRefProxy, isActive }) {
               <div className={styles.loader} />
             </div>
           )}
-
-          {!isInteractive && (
-            <div className={styles.interactionOverlay} onClick={enableInteraction} />
-          )}
+          
+          {/* Invisible overlay to catch all mouse events over the iframe smoothly */}
+          <div className={styles.interactionOverlay} />
         </div>
 
       </div>
