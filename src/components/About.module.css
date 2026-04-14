@@ -51,16 +51,21 @@
   aspect-ratio: 4 / 5; /* Taller than a square, but not as long as 3/4 */
   background: #1a0500;
   border-radius: 3px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px; /* This creates the thick "surround" frame */
+  box-sizing: border-box;
 }
 
 .profileImage {
   width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  border-radius: 4px;
+  height: 100%;
+  object-fit: contain; /* Zooms out to show the full image within the frame */
+  border-radius: 2px;
   filter: grayscale(10%) contrast(110%);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  display: block;
 }
 
 /* ── Right: text — bleeds left over image ── */

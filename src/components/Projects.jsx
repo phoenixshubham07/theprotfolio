@@ -124,14 +124,10 @@ export default function Projects() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
-          end: '+=400%', // Increased distance for a more natural scroll pace
+          end: '+=400%', // Reduced from 800% to 400% for faster transitions
           pin: true,
-          scrub: 1.2,    // Slightly slower scrub for better interpolation at higher refresh rates
+          scrub: 1,      // Snappier scrub
           onUpdate: (self) => {
-            // Determine active index based on scroll progress
-            // 0.0 - 0.33 -> 0
-            // 0.33 - 0.66 -> 1
-            // 0.66 - 1.0 -> 2
             const prog = self.progress
             if (prog < 0.33) setActiveIndex(0)
             else if (prog < 0.66) setActiveIndex(1)
@@ -147,23 +143,23 @@ export default function Projects() {
       // CARD 1 -> EXIT (Ingredio)
       tl.to(card1Ref.current, {
         y: '-100%',
-        z: -800,       // Reduced from -1200 to keep it in a more performant frustum
-        rotationX: -10, // Reduced for stability
+        z: -800,
+        rotationX: -10,
         opacity: 0,
-        filter: 'blur(10px)', // Reduced blur for faster GPU processing
-        ease: 'power2.inOut'
+        filter: 'blur(10px)',
+        ease: 'power3.inOut' // More natural smoothing
       }, 0.5)
       
       // SYNC TITLE 1 -> 2
       tl.to(wheelRef.current, {
         yPercent: -33.33,
-        ease: 'power2.inOut'
+        ease: 'power3.inOut' // Switched to power3 for smoother easing
       }, 0.5)
 
       // CARD 2 -> ENTER (Synthrox)
       tl.fromTo(card2Ref.current, 
         { y: '100%', z: 800, rotationX: 10, opacity: 0 },
-        { y: 0, z: 0, rotationX: 0, opacity: 1, ease: 'power2.inOut' },
+        { y: 0, z: 0, rotationX: 0, opacity: 1, ease: 'power3.inOut' },
         0.5
       )
 
@@ -175,19 +171,19 @@ export default function Projects() {
         rotationX: -10,
         opacity: 0,
         filter: 'blur(10px)',
-        ease: 'power2.inOut'
+        ease: 'power3.inOut'
       }, 1.5)
 
       // SYNC TITLE 2 -> 3
       tl.to(wheelRef.current, {
         yPercent: -66.66,
-        ease: 'power2.inOut'
+        ease: 'power3.inOut'
       }, 1.5)
 
       // CARD 3 -> ENTER (Algoclash)
       tl.fromTo(card3Ref.current, 
         { y: '100%', z: 800, rotationX: 10, opacity: 0 },
-        { y: 0, z: 0, rotationX: 0, opacity: 1, ease: 'power2.inOut' },
+        { y: 0, z: 0, rotationX: 0, opacity: 1, ease: 'power3.inOut' },
         1.5
       )
 
