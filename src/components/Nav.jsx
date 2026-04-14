@@ -25,13 +25,13 @@ export default function Nav() {
       <a href="#hero">
         <Shuffle text="HOME" tag="span" />
       </a>
-      <a href="#about">
+      <a href="#projects">
         <Shuffle text="WORK" tag="span" />
       </a>
       <a href="#about">
         <Shuffle text="INFO" tag="span" />
       </a>
-      <a href="#about">
+      <a href="#contact">
         <Shuffle text="CONTACT" tag="span" />
       </a>
     </nav>

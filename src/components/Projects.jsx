@@ -15,7 +15,7 @@ const PROJECTS = [
   },
   {
     id: 2,
-    name: 'Synthrox.io',
+    name: 'Syntrox.io',
     url: 'https://syntrox.io',
     desc: 'An interactive 3D web experience focusing on innovative design and seamless navigation.',
     tech: ['React', 'Three.js', 'GSAP', 'WebGL']
@@ -240,7 +240,7 @@ export default function Projects() {
         <div className={styles.wheelViewport}>
           <div ref={wheelRef} className={styles.wheelTrack}>
             <div className={styles.wheelItem}>INGREDIO</div>
-            <div className={styles.wheelItem}>SYNTHROX.IO</div>
+            <div className={styles.wheelItem}>SYNTROX.IO</div>
             <div className={styles.wheelItem}>ALGOCLASH.IN</div>
           </div>
         </div>

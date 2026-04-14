@@ -3,10 +3,11 @@
   top: 50%;
   transform: translateY(-50%);
   font-family: 'Cormorant Garamond', serif;
-  font-size: 20px;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.75);
-  letter-spacing: 0.02em;
+  font-size: 38px; /* Increased from 20px */
+  font-weight: 500; /* Increased weight slightly for better visibility */
+  color: rgba(255, 255, 255, 0.9); /* Higher opacity for contrast */
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Helps it pop against any background */
+  letter-spacing: 0.05em;
   z-index: 200;
   pointer-events: none;
   user-select: none;

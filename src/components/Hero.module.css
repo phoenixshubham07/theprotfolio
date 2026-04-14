@@ -61,8 +61,8 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Added soft shadow to pop from ASCII background */
 }
 .tagline em {
-  font-style: normal; /* Removed italics per user preferences for readability */
-  font-weight: 600;
+  font-style: italic; /* Restored italics per user request */
+  font-weight: 300;
 }
 
 /* ── Bottom bar ── */
