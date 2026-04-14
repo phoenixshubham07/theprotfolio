@@ -146,8 +146,7 @@ export default function Projects() {
         z: -800,
         rotationX: -10,
         opacity: 0,
-        filter: 'blur(10px)',
-        ease: 'power3.inOut' // More natural smoothing
+        ease: 'power3.inOut' // Removed blur filter to fix Safari/Mac performance issues with iframes
       }, 0.5)
       
       // SYNC TITLE 1 -> 2
@@ -170,8 +169,7 @@ export default function Projects() {
         z: -800,
         rotationX: -10,
         opacity: 0,
-        filter: 'blur(10px)',
-        ease: 'power3.inOut'
+        ease: 'power3.inOut' // Removed blur
       }, 1.5)
 
       // SYNC TITLE 2 -> 3

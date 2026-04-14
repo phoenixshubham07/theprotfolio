@@ -41,7 +41,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  perspective: 2000px; /* Crucial for intense 3D effect */
+  perspective: 2000px; /* Crucial for intense 3D effect - Safari relies on this root perspective */
   pointer-events: none; /* Let clicks pass down to children */
 }
 
@@ -61,7 +61,7 @@
   top: 0; /* Align with top of section */
   left: 0;
   width: 100%;
-  height: 35vh; /* Larger area for big font */
+  height: clamp(120px, 20vh, 250px); /* Responsive area */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -71,7 +71,7 @@
 }
 
 .wheelViewport {
-  height: 250px; /* Restored original height */
+  height: clamp(120px, 20vh, 250px); /* Responsive height */
   overflow: hidden;
 }
 
@@ -81,12 +81,12 @@
 }
 
 .wheelItem {
-  height: 250px; /* Restored original height */
+  height: clamp(120px, 20vh, 250px); /* Match viewport */
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Inter', sans-serif;
-  font-size: clamp(80px, 12vw, 200px); /* Restored original massive size */
+  font-size: clamp(40px, 8vw, 150px); /* Reduced massive size for better fit */
   font-weight: 800;
   letter-spacing: -0.04em;
   color: #fff;
@@ -96,12 +96,11 @@
 
 .projectWrapper {
   position: relative;
-  width: 100%;
-  max-width: 1300px;
-  height: 600px; /* Slightly shorter cards to fit better */
+  width: 90%;
+  max-width: 1200px;
+  height: clamp(350px, 55vh, 600px); /* Responsive height to fit on MacBooks */
   margin: 0 auto;
-  margin-top: 15vh; /* Pushed card down away from title */
-  transform-style: preserve-3d;
+  margin-top: clamp(80px, 15vh, 150px); /* Push down without escaping viewport */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -119,7 +118,6 @@
   background: #111;
   overflow: hidden;
   will-change: transform, opacity; /* Hardware acceleration hint */
-  transform-style: preserve-3d;
   transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1); /* Removed transform from transition to avoid conflict with GSAP */
   display: flex;
 }
