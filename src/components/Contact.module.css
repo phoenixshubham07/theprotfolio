@@ -3,11 +3,22 @@
   width: 100%;
   background: #080000; /* Matching overall dark theme */
   color: #fff;
-  padding: 100px 0 50px;
+  padding: 180px 0 50px;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.particleCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none; /* Let clicks pass through to text */
+  opacity: 0.8;
 }
 
 .container {
@@ -15,30 +26,66 @@
   width: 90%;
   margin: 0 auto;
   text-align: center;
+  position: relative;
+  z-index: 1; /* Keep above canvas */
+}
+
+/* Spotlight Heading */
+.headingWrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 60px;
+  cursor: crosshair;
 }
 
 .heading {
   font-family: 'Inter', sans-serif;
-  font-size: clamp(48px, 8vw, 120px);
+  font-size: clamp(40px, 8vw, 150px);
   font-weight: 800;
   letter-spacing: -0.04em;
-  margin-bottom: 60px;
   text-transform: uppercase;
-  opacity: 0.95;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15); /* Faint outline */
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.heading::before {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  -webkit-text-stroke: 0px;
+  clip-path: circle(120px at var(--x, 50%) var(--y, 50%)); /* Always a big circle */
+  opacity: 0; /* Fade out by default */
+  transition: opacity 0.3s ease-out; /* ONLY fade in/out, NO delay and NO clip-path transition! */
+  pointer-events: none;
+}
+
+.headingWrapper:hover .heading {
+  transform: scale(1.02);
+}
+
+.headingWrapper:hover .heading::before {
+  opacity: 1; /* Instantly starts following, gracefully fading in */
+  filter: drop-shadow(0 0 20px rgba(109, 237, 240, 0.4)); /* Cyan neon glow */
 }
 
 .details {
   display: flex;
   flex-direction: column;
-  gap: 30px;
-  margin-bottom: 100px;
+  gap: 50px;
+  margin-bottom: 120px;
   align-items: center;
 }
 
 .row {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 }
 
 .label {
@@ -46,19 +93,40 @@
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 8px;
+}
+
+.magneticWrap {
+  display: inline-block;
+  padding: 10px 20px;
 }
 
 .value {
   font-family: 'Inter', sans-serif;
-  font-size: clamp(20px, 4vw, 36px);
+  font-size: clamp(24px, 5vw, 42px);
   color: #fff;
   text-decoration: none;
-  transition: color 0.3s ease;
   font-weight: 500;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 5px;
+  overflow: hidden;
 }
 
-.value:hover {
-  color: #6dedf0; /* Accent color matching cursor */
+/* Sliding underline */
+.underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #6dedf0;
+  transform: translateX(-101%);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.magneticWrap:hover .underline {
+  transform: translateX(0);
 }
 
 .footer {
@@ -71,6 +139,8 @@
   color: rgba(255, 255, 255, 0.3);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  position: relative;
+  z-index: 10;
 }
 
 @media (max-width: 768px) {

@@ -106,11 +106,7 @@ export default function Hero() {
           </span>
 
           <div className={styles.socials}>
-            <a href="https://wa.me/" target="_blank" rel="noopener">
-              <Shuffle text="WHATSAPP" tag="span" />
-            </a>
-            <span className={styles.sep}>/</span>
-            <a href="https://linkedin.com/" target="_blank" rel="noopener">
+            <a href="https://www.linkedin.com/in/shubham-barik/" target="_blank" rel="noopener noreferrer">
               <Shuffle text="LINKED" tag="span" /><span className={styles.accent}><Shuffle text="IN" tag="span" /></span>
             </a>
           </div>
