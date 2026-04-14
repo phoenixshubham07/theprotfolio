@@ -165,6 +165,19 @@ export default function Contact() {
   const emailMagnetic = createMagneticRef()
   const phoneMagnetic = createMagneticRef()
 
+  const [flirtyMessage, setFlirtyMessage] = useState('')
+
+  const handleIdentityClick = (role) => {
+    if (role === 'Wife' || role === 'Girlfriend' || role === 'Sister') {
+      setFlirtyMessage(`Nice try, but the ${role} position is strictly locked. 🔒`)
+    } else if (role === 'Friend') {
+      setFlirtyMessage(`A friend? 😉 Well, my inbox is always open for you... let's talk.`)
+      setTimeout(() => {
+        window.location.href = "mailto:phoenixshubham07@gmail.com?subject=Hey there 😉&body=So about that friend application..."
+      }, 2000)
+    }
+  }
+
   return (
     <section id="contact" className={styles.contact} ref={containerRef}>
       
@@ -185,6 +198,26 @@ export default function Contact() {
           >
             GET IN TOUCH
           </h2>
+        </div>
+
+        {/* Quirky Role Selector */}
+        <div className={styles.roleSelector}>
+          <p className={styles.rolePrompt}>Who is visiting?</p>
+          <div className={styles.roleButtons}>
+            <button className={styles.lockedBtn} onClick={() => handleIdentityClick('Wife')}>
+              Wife 🔒
+            </button>
+            <button className={styles.lockedBtn} onClick={() => handleIdentityClick('Girlfriend')}>
+              Girlfriend 🔒
+            </button>
+            <button className={styles.lockedBtn} onClick={() => handleIdentityClick('Sister')}>
+              Sister 🔒
+            </button>
+            <button className={styles.friendBtn} onClick={() => handleIdentityClick('Friend')}>
+              Friend ☕
+            </button>
+          </div>
+          {flirtyMessage && <p className={styles.flirtyResponse}>{flirtyMessage}</p>}
         </div>
         
         <div className={styles.details}>
