@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import ScrollReveal from './ScrollReveal'
 import Shuffle from './Shuffle'
 import styles from './About.module.css'
+import profileImg from '../assets/profile.png'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -107,7 +108,7 @@ export default function About() {
       <div className={styles.layout}>
 
         <div ref={imageRef} className={styles.imageCol}>
-          <div className={styles.placeholder} />
+          <img src={profileImg} alt="Shubham Profile" className={styles.profileImage} />
         </div>
 
         <div className={styles.textCol}>
@@ -126,7 +127,6 @@ export default function About() {
 
           <div ref={bioRef} className={styles.bio}>
             <p className={styles.bioLead}>My name is Shubham. I'm a passionate developer who bridges the gap between high-end design and robust backend logic, helping companies unlock their full potential with seamless, fullstack solutions.</p>
-            <a href="#projects" className={styles.bioLink}>View Projects</a>
           </div>
         </div>
 

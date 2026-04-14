@@ -117,9 +117,9 @@
               0 0 0 1px rgba(255,255,255,0.1);
   background: #111;
   overflow: hidden;
-  will-change: transform;
+  will-change: transform, opacity; /* Hardware acceleration hint */
   transform-style: preserve-3d;
-  transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1), transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1); /* Removed transform from transition to avoid conflict with GSAP */
   display: flex;
 }
 
@@ -227,8 +227,36 @@
   flex: 1;
   width: 100%;
   border: none;
-  background: #fff; /* fallback color if the site doesn't set body bg */
-  scrollbar-width: none; /* Firefox */
+  background: #000; /* changed from white to avoid flash */
+  scrollbar-width: none;
+  opacity: 0;
+  transition: opacity 0.8s ease-in;
+}
+
+.iframeLoaded {
+  opacity: 1 !important;
+}
+
+.iframePlaceholder {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.loader {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #6dedf0;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .iframe::-webkit-scrollbar {

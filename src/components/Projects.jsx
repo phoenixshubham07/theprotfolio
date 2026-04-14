@@ -29,12 +29,20 @@ const PROJECTS = [
   }
 ]
 
-function ProjectCard({ project, index, cardRefProxy }) {
+function ProjectCard({ project, index, cardRefProxy, isActive }) {
   const cardRef = useRef(null)
-  const cursorRef = useRef(null)
-  const iframeRef = useRef(null)
   
+  // Algoclash.in (ID 3) should load immediately; others lazy-load on scroll
+  const shouldEagerLoad = project.id === 3
+  const [hasLoaded, setHasLoaded] = useState(shouldEagerLoad)
   const [isInteractive, setIsInteractive] = useState(false)
+
+  // Once active, we trigger the load. We never "unload" to keep the session alive.
+  useEffect(() => {
+    if ((isActive || shouldEagerLoad) && !hasLoaded) {
+      setHasLoaded(true)
+    }
+  }, [isActive, hasLoaded, shouldEagerLoad])
 
   // Pass ref upwards for the master timeline overlay
   useEffect(() => {
@@ -49,16 +57,17 @@ function ProjectCard({ project, index, cardRefProxy }) {
     const x = e.clientX - left
     const y = e.clientY - top
     
-    // Calculate rotation limits (-10 to 10 degrees)
-    const rotateX = ((y / height) - 0.5) * -15
-    const rotateY = ((x / width) - 0.5) * 15
+    // Calculate rotation limits (-6 to 6 degrees for smoother feel)
+    const rotateX = ((y / height) - 0.5) * -12
+    const rotateY = ((x / width) - 0.5) * 12
 
     gsap.to(cardRef.current, {
       rotateX,
       rotateY,
-      duration: 0.5,
+      duration: 0.8, // Increased duration for smoother high-refresh rate tracking
       ease: 'power2.out',
-      transformPerspective: 1200
+      transformPerspective: 1500, // Slightly subtler perspective
+      overwrite: 'auto' // Crucial to prevent animation stacking lag
     })
   }
 
@@ -68,12 +77,13 @@ function ProjectCard({ project, index, cardRefProxy }) {
 
   const handleMouseLeave = () => {
     if (isInteractive) return
-    // Reset rotations
+    // Reset rotations with a longer, smoother cubic ease
     gsap.to(cardRef.current, {
       rotateX: 0,
       rotateY: 0,
-      duration: 0.8,
-      ease: 'power3.out'
+      duration: 1.2,
+      ease: 'power3.out',
+      overwrite: 'auto'
     })
   }
 
@@ -103,14 +113,19 @@ function ProjectCard({ project, index, cardRefProxy }) {
             <div className={styles.browserUrl}>{project.url.replace('https://', '')}</div>
           </div>
           
-          <iframe 
-            ref={iframeRef}
-            src={project.url}
-            className={styles.iframe}
-            style={{ pointerEvents: isInteractive ? 'auto' : 'none' }}
-            tabIndex={-1}
-            title={`${project.name} Live Preview`}
-          />
+          {hasLoaded ? (
+            <iframe 
+              src={project.url}
+              className={`${styles.iframe} ${hasLoaded ? styles.iframeLoaded : ''}`}
+              style={{ pointerEvents: isInteractive ? 'auto' : 'none' }}
+              tabIndex={-1}
+              title={`${project.name} Live Preview`}
+            />
+          ) : (
+            <div className={styles.iframePlaceholder}>
+              <div className={styles.loader} />
+            </div>
+          )}
 
           {!isInteractive && (
             <div className={styles.interactionOverlay} onClick={enableInteraction} />
@@ -126,32 +141,49 @@ function ProjectCard({ project, index, cardRefProxy }) {
 export default function Projects() {
   const sectionRef = useRef(null)
   
+  // Track which index is currently active to trigger iframe loading
+  const [activeIndex, setActiveIndex] = useState(0)
+  
   // Refs for our manual overlay tracking
   const wheelRef = useRef(null)
   const card1Ref = useRef(null)
   const card2Ref = useRef(null)
   const card3Ref = useRef(null)
 
+  // Use 1.2s scrub for smoother high-performance scrolling
   useEffect(() => {
     let ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
-          end: '+=300%', // the scrolling distance
+          end: '+=400%', // Increased distance for a more natural scroll pace
           pin: true,
-          scrub: 1
+          scrub: 1.2,    // Slightly slower scrub for better interpolation at higher refresh rates
+          onUpdate: (self) => {
+            // Determine active index based on scroll progress
+            // 0.0 - 0.33 -> 0
+            // 0.33 - 0.66 -> 1
+            // 0.66 - 1.0 -> 2
+            const prog = self.progress
+            if (prog < 0.33) setActiveIndex(0)
+            else if (prog < 0.66) setActiveIndex(1)
+            else setActiveIndex(2)
+          }
         }
       })
 
-      // We have 3 states (0%, 33.33%, 66.66% visible for titles)
+      // Ensure all cards are pre-set to avoid layout jumps
+      gsap.set([card2Ref.current, card3Ref.current], { opacity: 0, y: '100%', z: 800 })
+
+      // --- STAGE 1: CARD 1 SWAP ---
       // CARD 1 -> EXIT (Ingredio)
       tl.to(card1Ref.current, {
-        y: '-100%', 
-        z: -1200,
-        rotationX: -15,
+        y: '-100%',
+        z: -800,       // Reduced from -1200 to keep it in a more performant frustum
+        rotationX: -10, // Reduced for stability
         opacity: 0,
-        filter: 'blur(20px)',
+        filter: 'blur(10px)', // Reduced blur for faster GPU processing
         ease: 'power2.inOut'
       }, 0.5)
       
@@ -163,18 +195,19 @@ export default function Projects() {
 
       // CARD 2 -> ENTER (Synthrox)
       tl.fromTo(card2Ref.current, 
-        { y: '100%', z: 1200, rotationX: 15, opacity: 0 },
+        { y: '100%', z: 800, rotationX: 10, opacity: 0 },
         { y: 0, z: 0, rotationX: 0, opacity: 1, ease: 'power2.inOut' },
         0.5
       )
 
+      // --- STAGE 2: CARD 2 SWAP ---
       // CARD 2 -> EXIT
       tl.to(card2Ref.current, {
         y: '-100%',
-        z: -1200,
-        rotationX: -15,
+        z: -800,
+        rotationX: -10,
         opacity: 0,
-        filter: 'blur(20px)',
+        filter: 'blur(10px)',
         ease: 'power2.inOut'
       }, 1.5)
 
@@ -186,13 +219,13 @@ export default function Projects() {
 
       // CARD 3 -> ENTER (Algoclash)
       tl.fromTo(card3Ref.current, 
-        { y: '100%', z: 1200, rotationX: 15, opacity: 0 },
+        { y: '100%', z: 800, rotationX: 10, opacity: 0 },
         { y: 0, z: 0, rotationX: 0, opacity: 1, ease: 'power2.inOut' },
         1.5
       )
 
-      // WAIT FOR INTERACTION -> Adds stability before scrolling to next section
-      tl.to({}, { duration: 1.5 }) 
+      // Buffer at the end to prevent immediate snapping out
+      tl.to({}, { duration: 1.0 }) 
       
     }, sectionRef)
     
@@ -215,13 +248,13 @@ export default function Projects() {
 
       <div className={styles.projectsListPinned}>
         <div className={styles.cardContainerWrapper} style={{ zIndex: 2 }}>
-          <ProjectCard project={PROJECTS[0]} index={0} cardRefProxy={card1Ref} />
+          <ProjectCard project={PROJECTS[0]} index={0} cardRefProxy={card1Ref} isActive={activeIndex === 0} />
         </div>
         <div className={styles.cardContainerWrapper} style={{ zIndex: 3 }}>
-          <ProjectCard project={PROJECTS[1]} index={1} cardRefProxy={card2Ref} />
+          <ProjectCard project={PROJECTS[1]} index={1} cardRefProxy={card2Ref} isActive={activeIndex === 1} />
         </div>
         <div className={styles.cardContainerWrapper} style={{ zIndex: 4 }}>
-          <ProjectCard project={PROJECTS[2]} index={2} cardRefProxy={card3Ref} />
+          <ProjectCard project={PROJECTS[2]} index={2} cardRefProxy={card3Ref} isActive={activeIndex === 2} />
         </div>
       </div>
     </section>
