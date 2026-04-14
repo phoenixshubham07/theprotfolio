@@ -214,13 +214,13 @@ export default function Projects() {
       </div>
 
       <div className={styles.projectsListPinned}>
-        <div className={styles.cardContainerWrapper} style={{ zIndex: 2 }}>
+        <div className={styles.cardContainerWrapper} style={{ zIndex: activeIndex === 0 ? 5 : 2 }}>
           <ProjectCard project={PROJECTS[0]} index={0} cardRefProxy={card1Ref} isActive={activeIndex === 0} />
         </div>
-        <div className={styles.cardContainerWrapper} style={{ zIndex: 3 }}>
+        <div className={styles.cardContainerWrapper} style={{ zIndex: activeIndex === 1 ? 5 : 3 }}>
           <ProjectCard project={PROJECTS[1]} index={1} cardRefProxy={card2Ref} isActive={activeIndex === 1} />
         </div>
-        <div className={styles.cardContainerWrapper} style={{ zIndex: 4 }}>
+        <div className={styles.cardContainerWrapper} style={{ zIndex: activeIndex === 2 ? 5 : 4 }}>
           <ProjectCard project={PROJECTS[2]} index={2} cardRefProxy={card3Ref} isActive={activeIndex === 2} />
         </div>
       </div>
