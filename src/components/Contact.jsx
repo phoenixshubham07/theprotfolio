@@ -163,7 +163,7 @@ export default function Contact() {
   }
 
   const emailMagnetic = createMagneticRef()
-  const phoneMagnetic = createMagneticRef()
+  const linkedinMagnetic = createMagneticRef()
 
   const [flirtyMessage, setFlirtyMessage] = useState('')
 
@@ -232,10 +232,10 @@ export default function Contact() {
           </div>
           
           <div className={styles.row}>
-            <span className={styles.label}>Phone</span>
-            <div className={styles.magneticWrap} {...phoneMagnetic}>
-              <a ref={phoneMagnetic.ref} href="tel:+919329189589" className={styles.value}>
-                +91 9329189589
+            <span className={styles.label}>LinkedIn</span>
+            <div className={styles.magneticWrap} {...linkedinMagnetic}>
+              <a ref={linkedinMagnetic.ref} href="https://www.linkedin.com/in/shubham-barik/" target="_blank" rel="noopener noreferrer" className={styles.value}>
+                shubham-barik
                 <div className={styles.underline}></div>
               </a>
             </div>
