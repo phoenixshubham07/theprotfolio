@@ -106,8 +106,13 @@ export default function Hero() {
           </span>
 
           <div className={styles.socials}>
-            <a href="https://www.linkedin.com/in/shubham-barik/" target="_blank" rel="noopener noreferrer">
-              <Shuffle text="LINKED" tag="span" /><span className={styles.accent}><Shuffle text="IN" tag="span" /></span>
+            <a 
+              href="https://www.linkedin.com/in/shubham-barik/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              base-hover="true"
+            >
+              <Shuffle text="LINKEDIN" triggerOnHover={true} />
             </a>
           </div>
 

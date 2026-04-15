@@ -176,7 +176,6 @@ export default function Contact() {
 
         <footer className={styles.footer}>
           <p>© {new Date().getFullYear()} Shubham Barik</p>
-          <p>Made with ❤️ in India</p>
         </footer>
       </div>
     </section>
