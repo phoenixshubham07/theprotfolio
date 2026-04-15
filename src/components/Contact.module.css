@@ -75,14 +75,7 @@
 }
 
 /* Quirky Role Selector */
-.roleSelector {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: -20px;
-  margin-bottom: 60px;
-  gap: 20px;
-}
+
 
 .rolePrompt {
   font-size: 14px;
@@ -91,55 +84,17 @@
   color: rgba(255, 255, 255, 0.4);
 }
 
-.roleButtons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center;
-}
 
-.lockedBtn, .friendBtn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
-  padding: 12px 24px;
-  border-radius: 30px;
-  font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  outline: none;
-}
 
-.lockedBtn {
-  cursor: not-allowed;
-  opacity: 0.5;
-  color: rgba(255, 255, 255, 0.5);
-}
 
-.lockedBtn:hover {
-  background: rgba(255, 0, 0, 0.1);
-  border-color: rgba(255, 0, 0, 0.3);
-  color: #ff4d4d;
-}
 
-.friendBtn:hover {
-  background: rgba(109, 237, 240, 0.1);
-  border-color: rgba(109, 237, 240, 0.4);
-  color: #6dedf0;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(109, 237, 240, 0.15);
-}
 
-.flirtyResponse {
-  margin-top: 15px;
-  font-size: 16px;
-  color: #ff6b6b; /* Slightly pinkish red for flirty text */
-  font-style: italic;
-  max-width: 400px;
-  line-height: 1.5;
-  animation: fadeIn 0.4s ease-out forwards;
-}
+
+
+
+
+
+
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-10px); }

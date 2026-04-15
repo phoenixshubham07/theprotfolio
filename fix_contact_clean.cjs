@@ -1,4 +1,9 @@
-import { useEffect, useRef } from 'react'
+const fs = require('fs');
+const file = '/Users/phoenixechoes/Documents/portfolio/src/components/Contact.jsx';
+const cssFile = '/Users/phoenixechoes/Documents/portfolio/src/components/Contact.module.css';
+
+// 1. Rewrite Contact.jsx to be professional and clean
+const newJsx = `import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import styles from './Contact.module.css'
 
@@ -65,7 +70,7 @@ const ParticleCanvas = () => {
           const dist = Math.sqrt(dx*dx + dy*dy)
           if (dist < maxDist) {
             ctx.beginPath()
-            ctx.strokeStyle = `rgba(109, 237, 240, ${0.4 * (1 - dist/maxDist)})`
+            ctx.strokeStyle = \`rgba(109, 237, 240, \${0.4 * (1 - dist/maxDist)})\`
             ctx.lineWidth = 1
             ctx.moveTo(particles[i].x, particles[i].y)
             ctx.lineTo(particles[j].x, particles[j].y)
@@ -77,7 +82,7 @@ const ParticleCanvas = () => {
         const dist = Math.sqrt(dx*dx + dy*dy)
         if (dist < maxDist * 1.5) {
           ctx.beginPath()
-          ctx.strokeStyle = `rgba(255, 0, 128, ${0.8 * (1 - dist/(maxDist*1.5))})`
+          ctx.strokeStyle = \`rgba(255, 0, 128, \${0.8 * (1 - dist/(maxDist*1.5))})\`
           ctx.lineWidth = 1.5
           ctx.moveTo(particles[i].x, particles[i].y)
           ctx.lineTo(mouse.x, mouse.y)
@@ -117,8 +122,8 @@ export default function Contact() {
     const rect = headingRef.current.getBoundingClientRect()
     const x = ((e.clientX - rect.left) / rect.width) * 100
     const y = ((e.clientY - rect.top) / rect.height) * 100
-    headingRef.current.style.setProperty('--x', `${x}%`)
-    headingRef.current.style.setProperty('--y', `${y}%`)
+    headingRef.current.style.setProperty('--x', \`\${x}%\`)
+    headingRef.current.style.setProperty('--y', \`\${y}%\`)
   }
 
   const createMagneticRef = () => {
@@ -182,3 +187,18 @@ export default function Contact() {
     </section>
   )
 }
+`;
+
+fs.writeFileSync(file, newJsx);
+
+// 2. Cleanup CSS by removing role selector styles
+let css = fs.readFileSync(cssFile, 'utf8');
+css = css.replace(/\.roleSelector\b[^{]*\{[^}]*\}/g, '');
+css = css.replace(/\.roleButtons\b[^{]*\{[^}]*\}/g, '');
+css = css.replace(/\.lockedBtn\b[^{]*\{[^}]*\}/g, '');
+css = css.replace(/\.friendBtn\b[^{]*\{[^}]*\}/g, '');
+css = css.replace(/\.flirtyResponse\b[^{]*\{[^}]*\}/g, '');
+
+fs.writeFileSync(cssFile, css);
+
+console.log("Contact cleaned and simplified.");
