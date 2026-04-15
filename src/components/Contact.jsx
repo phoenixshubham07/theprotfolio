@@ -156,8 +156,8 @@ export default function Contact() {
           <div className={styles.row}>
             <span className={styles.label}>Email</span>
             <div className={styles.magneticWrap} {...emailMagnetic}>
-              <a ref={emailMagnetic.ref} href="mailto:phoenixshubham07@gmail.com" className={styles.value}>
-                phoenixshubham07@gmail.com
+              <a ref={emailMagnetic.ref} href="mailto:shubhambarik2006@gmail.com" className={styles.value}>
+                shubhambarik2006@gmail.com
                 <div className={styles.underline}></div>
               </a>
             </div>
