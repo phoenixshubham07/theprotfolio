@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import ScrollReveal from './ScrollReveal'
 import Shuffle from './Shuffle'
 import styles from './About.module.css'
-import profileImg from '../assets/profile.png'
+import profileImg from '../assets/profile.jpg'
 
 gsap.registerPlugin(ScrollTrigger)
 

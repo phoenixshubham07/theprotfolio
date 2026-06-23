@@ -1,4 +1,3 @@
-import { useRef } from 'react'
 import styles from './TechStack.module.css'
 
 const DEPLOYMENT = [
@@ -43,6 +42,9 @@ function Marquee({ items, direction = 'left', label }) {
                   src={item.icon} 
                   alt={item.name} 
                   className={styles.iconOnly} 
+                  loading="lazy"
+                  width="24"
+                  height="24"
                   onError={(e) => {
                     e.target.style.display = 'none';
                     e.target.nextSibling.style.display = 'block';
@@ -60,6 +62,9 @@ function Marquee({ items, direction = 'left', label }) {
                   src={item.icon} 
                   alt={item.name} 
                   className={styles.iconOnly}
+                  loading="lazy"
+                  width="24"
+                  height="24"
                   onError={(e) => {
                     e.target.style.display = 'none';
                     e.target.nextSibling.style.display = 'block';

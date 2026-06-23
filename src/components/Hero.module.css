@@ -3,6 +3,8 @@
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 100vh;
 }
 
 /* Background — GSAP blurs this on scroll */
@@ -141,4 +143,40 @@
   font-weight: 300;
   font-style: normal; 
   letter-spacing: -0.02em; /* Smooth letter spacing, no italics */
+}
+
+@media (max-width: 768px) {
+  .tagline {
+    top: 40px;
+    width: 90%;
+    white-space: normal;
+  }
+  .tagline span {
+    font-size: clamp(20px, 6.5vw, 28px);
+    line-height: 1.4;
+  }
+  
+  .name {
+    bottom: 160px;
+    left: 20px;
+    width: calc(100% - 40px);
+  }
+  
+  .bar {
+    bottom: 95px;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 20px;
+  }
+  .location {
+    text-align: center;
+    font-size: 13px;
+  }
+  .socials {
+    justify-content: center;
+    font-size: 13px;
+  }
+  .spacer {
+    display: none;
+  }
 }

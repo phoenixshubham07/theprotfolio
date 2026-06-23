@@ -12,6 +12,7 @@ import Projects from './components/Projects'
 import TechStack from './components/TechStack'
 import Contact  from './components/Contact'
 import HeroExperiment from './components/HeroExperiment'
+import BackgroundExperiment from './components/BackgroundExperiment'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -33,9 +34,9 @@ export default function App() {
   useEffect(() => {
     // Lenis smooth scroll — buttery inertia
     const lenis = new Lenis({
-      duration: 1.8,
+      duration: 1.5,
       easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      wheelMultiplier: 0.6, // Slower scrolling speed
+      wheelMultiplier: 1.0,
       smoothWheel: true,
     })
 
@@ -57,6 +58,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/hero" element={<HeroExperiment />} />
+        <Route path="/background" element={<BackgroundExperiment />} />
       </Routes>
     </BrowserRouter>
   )

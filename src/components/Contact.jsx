@@ -52,7 +52,9 @@ const ParticleCanvas = () => {
     window.addEventListener('mouseleave', onMouseLeave)
 
     let animationId
+    let isLooping = true
     const animate = () => {
+      if (!isLooping) return
       ctx.clearRect(0, 0, w, h)
       particles.forEach(p => {
         p.update()
@@ -97,11 +99,63 @@ const ParticleCanvas = () => {
     }
     handleResize()
     window.addEventListener('resize', handleResize)
+
+    const section = canvas.closest('#contact')
+
+    const pauseSimulation = () => {
+      if (isLooping) {
+        isLooping = false
+        cancelAnimationFrame(animationId)
+      }
+    }
+
+    const resumeSimulation = () => {
+      if (!isLooping) {
+        isLooping = true
+        animate()
+      }
+    }
+
+    const handleContentVisibility = (e) => {
+      if (e.skipped) {
+        pauseSimulation()
+      } else {
+        resumeSimulation()
+      }
+    }
+
+    let observer
+    const isSupported = 'contentVisibility' in document.documentElement.style
+
+    if (section) {
+      if (isSupported) {
+        section.addEventListener('contentvisibilityautostatechange', handleContentVisibility)
+      } else {
+        observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              resumeSimulation()
+            } else {
+              pauseSimulation()
+            }
+          });
+        }, { rootMargin: '200px' })
+        observer.observe(section)
+      }
+    }
+
     return () => {
       cancelAnimationFrame(animationId)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('mouseleave', onMouseLeave)
       window.removeEventListener('resize', handleResize)
+      if (section) {
+        if (isSupported) {
+          section.removeEventListener('contentvisibilityautostatechange', handleContentVisibility)
+        } else if (observer) {
+          observer.disconnect()
+        }
+      }
     }
   }, [])
 
@@ -121,7 +175,7 @@ export default function Contact() {
     headingRef.current.style.setProperty('--y', `${y}%`)
   }
 
-  const createMagneticRef = () => {
+  const useMagneticRef = () => {
     const ref = useRef(null)
     const handleMove = (e) => {
       const el = ref.current
@@ -139,8 +193,8 @@ export default function Contact() {
     return { ref, onMouseMove: handleMove, onMouseLeave: handleLeave }
   }
 
-  const emailMagnetic = createMagneticRef()
-  const linkedinMagnetic = createMagneticRef()
+  const emailMagnetic = useMagneticRef()
+  const linkedinMagnetic = useMagneticRef()
 
   return (
     <section id="contact" className={styles.contact} ref={containerRef}>

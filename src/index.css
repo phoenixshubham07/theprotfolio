@@ -1,3 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;900&display=swap');
+
+:root {
+  --accent-cyan: #00f2fe;
+  --accent-cyan-rgb: 0, 242, 254;
+  --accent-crimson: #f43f5e;
+  --accent-crimson-rgb: 244, 63, 94;
+  --accent-yellow: #ffd700;
+  --accent-yellow-rgb: 255, 215, 0;
+  --accent-slate: #94a3b8;
+}
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;

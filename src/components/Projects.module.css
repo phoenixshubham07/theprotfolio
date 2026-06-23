@@ -43,6 +43,52 @@
   justify-content: center;
   perspective: 2000px; /* Crucial for intense 3D effect - Safari relies on this root perspective */
   pointer-events: none; /* Let clicks pass down to children */
+  overflow: visible;
+  z-index: 10;
+
+  /* 3D Spiral Staircase Variables */
+  --delta-theta: 45deg;
+  --delta-y: 280px;
+  --r: 650px;
+  --scroll-progress: 0;
+}
+
+@media (max-width: 1024px) {
+  .projectsListPinned {
+    --delta-theta: 40deg;
+    --delta-y: 240px;
+    --r: 520px;
+  }
+}
+
+@media (max-width: 768px) {
+  .projectsListPinned {
+    --delta-theta: 35deg;
+    --delta-y: 200px;
+    --r: 380px;
+  }
+}
+
+@media (max-width: 480px) {
+  .projectsListPinned {
+    --delta-theta: 25deg;
+    --delta-y: 160px;
+    --r: 240px;
+  }
+}
+
+.spiralTrack {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+  transform: translateZ(calc(-1 * var(--r)))
+             rotateY(calc(-1 * var(--scroll-progress) * var(--delta-theta)))
+             translateY(calc(-1 * var(--scroll-progress) * var(--delta-y)));
 }
 
 .cardContainerWrapper {
@@ -53,6 +99,11 @@
   align-items: center;
   justify-content: center;
   pointer-events: none; /* Let events pass through the full-screen wrapper */
+  transform-style: preserve-3d;
+  will-change: transform;
+  transform: rotateY(calc(var(--idx) * var(--delta-theta)))
+             translateY(calc(var(--idx) * var(--delta-y)))
+             translateZ(var(--r));
 }
 
 /* --- THE WHEEL OVERLAY --- */
@@ -96,30 +147,35 @@
 
 .projectWrapper {
   position: relative;
-  width: 90%;
-  max-width: 1200px;
-  height: clamp(350px, 55vh, 600px); /* Responsive height to fit on MacBooks */
+  width: clamp(860px, 98vh, 1300px);
+  height: clamp(540px, 68vh, 820px);
   margin: 0 auto;
-  margin-top: clamp(80px, 15vh, 150px); /* Push down without escaping viewport */
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: auto; /* Only catch events directly on the card wrapper */
+  pointer-events: auto;
+  
+  /* Depth of field transitions */
+  filter: blur(0px);
+  transition: filter 0.8s ease-in-out;
+}
+
+.inactiveCardWrapper {
+  filter: blur(16px);
 }
 
 /* The actual 3D Card */
 .card3d {
-  width: 90%;
+  width: 100%;
   height: 100%;
   position: relative;
   border-radius: 12px;
   box-shadow: 0 40px 100px rgba(0,0,0,0.8),
               0 0 0 1px rgba(255,255,255,0.1);
   background: #111;
-  overflow: hidden;
-  will-change: transform, opacity; /* Hardware acceleration hint */
-  transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1); /* Removed transform from transition to avoid conflict with GSAP */
+  will-change: transform;
   display: flex;
+  transform-style: preserve-3d;
 }
 
 /* Hovering on the wrapper triggers the card to shrink/slide left */
@@ -183,16 +239,17 @@
   transform: translateY(-50%) translateX(0);
 }
 
-/* Preview Iframe Container */
 .previewContainer {
   width: 100%;
   height: 100%;
   position: relative;
   background: #000;
-  border-right: 1px solid rgba(255,255,255,0.05);
   display: flex;
   flex-direction: column;
-  z-index: 2; /* keep in front of sliding details */
+  z-index: 2;
+  border-radius: 12px;
+  transform-style: preserve-3d;
+  transform: translateZ(10px);
 }
 
 .interactionOverlay {
@@ -200,73 +257,55 @@
   top: 0; left: 0; 
   width: 100%; height: 100%;
   z-index: 5;
-  cursor: pointer; /* Normal pointer instead of hiding */
+  cursor: pointer;
 }
 
-.browserHeader {
-  height: 40px;
-  background: #1a1a1a;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  gap: 12px;
-}
-
-.browserDots {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #ff5f56;
-  box-shadow: 16px 0 0 #ffbd2e, 32px 0 0 #27c93f;
-  margin-right: 24px;
-}
-
-.browserUrl {
-  font-family: monospace;
-  font-size: 11px;
-  color: #888;
-  background: #0a0a0a;
-  padding: 4px 16px;
-  border-radius: 4px;
+.imageAndIframeContainer {
   flex: 1;
-  text-align: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.screenshotImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 12px;
+  background: #111;
+  display: block;
+  z-index: 1;
 }
 
 .iframe {
-  flex: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
   border: none;
-  background: #000; /* changed from white to avoid flash */
+  background: transparent;
   scrollbar-width: none;
   opacity: 0;
-  transition: opacity 0.8s ease-in;
+  transition: opacity 0.8s ease-in-out;
+  border-radius: 12px;
+  z-index: 2;
+  pointer-events: none;
 }
 
 .iframeLoaded {
   opacity: 1 !important;
 }
 
-.iframePlaceholder {
-  flex: 1;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #000;
-}
-
-.loader {
-  width: 24px;
-  height: 24px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #6dedf0;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.card3d:hover .iframe.hideOnHover {
+  opacity: 0 !important;
+  transition: opacity 0.15s ease-out;
 }
 
 .iframe::-webkit-scrollbar {
@@ -335,3 +374,477 @@
   transform: scale(1.05);
   background: #ddd;
 }
+
+/* --- TRAVI CUSTOM MOCKUP PLACEHOLDER --- */
+.traviPlaceholder {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #090d16 0%, #11112b 50%, #20082c 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0 0 12px 12px;
+}
+
+.traviPlaceholder::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.traviGlassCard {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  transform: translateZ(50px); /* 3D float inside container */
+  text-align: left;
+}
+
+.traviBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.traviLogo {
+  font-size: 24px;
+}
+
+.traviBrand h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  margin: 0;
+  color: #fff;
+}
+
+.traviBadge {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(0, 240, 255, 0.15);
+  color: #00f0ff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+}
+
+.traviHeroText {
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  margin: 0 0 20px 0;
+}
+
+.traviSearchBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+
+.traviSearchIcon {
+  font-size: 16px;
+  opacity: 0.6;
+}
+
+.traviSearchPlaceholder {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #666;
+  user-select: none;
+}
+
+.traviChips {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.traviChip {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: #ccc;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.traviChip:hover {
+  background: rgba(0, 240, 255, 0.1);
+  color: #00f0ff;
+}
+
+.traviFooterBadge {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.traviFooterBadge span {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* --- MOBILE RESPONSIVE ADAPTATIONS --- */
+@media (max-width: 768px) {
+  .sectionPinned {
+    height: 100vh;
+  }
+
+  .projectWrapper {
+    width: clamp(280px, 90vw, 540px) !important;
+    height: clamp(180px, 58vw, 340px) !important;
+    margin-top: clamp(30px, 8vh, 60px) !important;
+  }
+
+  .card3d {
+    height: 100% !important;
+    overflow: hidden;
+  }
+
+  .previewContainer {
+    width: 100% !important;
+    height: 100% !important;
+    border-right: none;
+    border-radius: 12px;
+  }
+
+  .hoverHint {
+    display: none;
+  }
+
+  .wheelOverlay {
+    height: clamp(60px, 12vh, 100px);
+  }
+  
+  .wheelViewport {
+    height: clamp(60px, 12vh, 100px);
+  }
+  
+  .wheelItem {
+    height: clamp(60px, 12vh, 100px);
+    font-size: clamp(24px, 7vw, 44px);
+  }
+
+  .traviGlassCard {
+    padding: 16px;
+  }
+  
+  .traviHeroText {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  
+  .traviSearchBox {
+    padding: 8px 12px;
+    margin-bottom: 10px;
+  }
+  
+  .traviChips {
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+}
+
+.mobilePreview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 0 0 12px 12px;
+}
+
+.mobilePreviewLogo {
+  font-size: 44px;
+  margin: 0;
+}
+
+.mobilePreviewAction {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* --- DYNAMIC AMBIENT BACKGROUND GLOW --- */
+.projectAmbientBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+  background: #080000;
+}
+
+.ambientBgItem {
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  opacity: 0;
+  transition: opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: opacity;
+  transform: translate3d(0, 0, 0);
+}
+
+.ambientBgActive {
+  opacity: 0.55; /* Boosted from 0.28 to make the glow highly visible */
+}
+
+.ambientIframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.ambientOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Apply high-contrast blur overlay on top of the unblurred live background iframe */
+  backdrop-filter: blur(12px) saturate(3.2) brightness(1.7) contrast(1.15);
+  -webkit-backdrop-filter: blur(12px) saturate(3.2) brightness(1.7) contrast(1.15);
+  
+  /* Softer spotlight gradients to let the colors shine around the central cards */
+  background: radial-gradient(circle at center, transparent 40%, rgba(8, 0, 0, 0.65) 100%),
+              linear-gradient(to bottom, rgba(8, 0, 0, 0.85) 0%, transparent 15%, transparent 85%, rgba(8, 0, 0, 0.85) 100%);
+  z-index: 2;
+}
+
+.ambientImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+}
+
+.projectsIntro {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60; /* Above the cards (z-index 10) and background (z-index 1) */
+  pointer-events: none; /* Let scroll/clicks pass through */
+  will-change: opacity, transform, filter;
+}
+
+.introSplit {
+  width: 100%;
+  max-width: 1400px;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 80px;
+  box-sizing: border-box;
+}
+
+.introLeft {
+  flex: 0 0 52%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+}
+
+.introRight {
+  flex: 0 0 42%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: none !important; /* Prevent HMR scale residue */
+}
+
+.introTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(38px, 6vw, 92px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+  margin: 0 0 20px 0;
+  will-change: opacity, transform, filter;
+}
+
+.introSubtitle {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: clamp(24px, 3.2vw, 48px);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: 0em;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 650px;
+  width: 100%;
+  margin: 0;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  will-change: opacity, filter, transform;
+}
+
+.introLogoItem {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: opacity, transform, filter;
+}
+
+@media (max-width: 768px) {
+  .introSplit {
+    flex-direction: column;
+    justify-content: center;
+    gap: 40px;
+    padding: 0 30px;
+  }
+  
+  .introLeft {
+    flex: 0 0 auto;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .introRight {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 140px;
+  }
+  
+  .introTitle {
+    font-size: clamp(32px, 8vw, 48px);
+    margin-bottom: 12px;
+  }
+  
+  .introSubtitle {
+    font-size: clamp(20px, 4.2vw, 26px);
+  }
+}
+
+/* --- ABSTRACT ALIVE & BREATHING BACKGROUND --- */
+.abstractBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #0d0101 0%, #040000 100%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.12;
+  will-change: transform, opacity, filter;
+  transform: translate3d(0, 0, 0);
+}
+
+.blobCrimson {
+  background: radial-gradient(circle, #ff003c 0%, rgba(255, 0, 85, 0) 70%);
+  width: min(65vw, 750px);
+  height: min(65vw, 750px);
+  top: -15%;
+  left: -15%;
+}
+
+.blobOrange {
+  background: radial-gradient(circle, #ff5100 0%, rgba(255, 81, 0, 0) 70%);
+  width: min(60vw, 650px);
+  height: min(60vw, 650px);
+  bottom: -15%;
+  right: -15%;
+}
+
+.blobGold {
+  background: radial-gradient(circle, #ffaa00 0%, rgba(255, 170, 0, 0) 70%);
+  width: min(50vw, 550px);
+  height: min(50vw, 550px);
+  top: 35%;
+  left: 45%;
+}
+
+.gridOverlay {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 60, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 60, 0, 0.02) 1px, transparent 1px);
+  background-size: 80px 80px;
+  background-position: center;
+  mask-image: radial-gradient(circle at center, black 10%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 10%, transparent 80%);
+  opacity: 0.45;
+  will-change: transform;
+  transform-origin: center;
+}
+
+.abstractOverlayGlow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, transparent 30%, #040000 95%);
+  z-index: 2;
+}
+

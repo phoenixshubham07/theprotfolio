@@ -1,0 +1,149 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 300vh; /* Long scroll range to test animation */
+  background: #050000;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.viewport {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 1;
+  background: radial-gradient(circle at center, #0d0101 0%, #030000 100%);
+}
+
+.ambientGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255, 30, 0, 0.09) 0%, rgba(255, 80, 0, 0.02) 60%, transparent 90%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Three subtle animated color blobs to simulate fire and light */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.15;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.blobRed {
+  background: radial-gradient(circle, #ff003c 0%, rgba(255, 0, 85, 0) 70%);
+  width: 600px;
+  height: 600px;
+  top: -10%;
+  left: -10%;
+}
+
+.blobOrange {
+  background: radial-gradient(circle, #ff6600 0%, rgba(255, 102, 0, 0) 70%);
+  width: 500px;
+  height: 500px;
+  bottom: -10%;
+  right: -10%;
+}
+
+.svgCanvas {
+  width: min(92vw, 92vh);
+  height: min(92vw, 92vh);
+  max-width: 950px;
+  max-height: 950px;
+  overflow: visible;
+  z-index: 2;
+  position: relative;
+  will-change: transform;
+}
+
+.spiralLine {
+  stroke: url(#spiralGradient);
+  stroke-width: 3;
+  stroke-linecap: round;
+  fill: none;
+  filter: drop-shadow(0 0 10px rgba(255, 50, 0, 0.45));
+}
+
+.romanNumeral {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  fill: #fff;
+  text-shadow: 0 0 12px rgba(255, 80, 0, 0.7);
+  user-select: none;
+  pointer-events: none;
+}
+
+.romanNumeralCenter {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  fill: #ff5500;
+  text-shadow: 0 0 20px rgba(255, 85, 0, 0.9);
+  user-select: none;
+  pointer-events: none;
+}
+
+.gear {
+  fill: none;
+  stroke: rgba(255, 60, 0, 0.06);
+  stroke-width: 1.5;
+  will-change: transform;
+}
+
+.gearTeeth {
+  fill: none;
+  stroke: rgba(255, 60, 0, 0.06);
+  stroke-width: 4;
+}
+
+.ring {
+  fill: none;
+  stroke: rgba(255, 80, 0, 0.04);
+  stroke-width: 1;
+}
+
+.dottedRing {
+  fill: none;
+  stroke: rgba(255, 80, 0, 0.05);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 8;
+  will-change: transform;
+}
+
+.overlayInfo {
+  position: fixed;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  z-index: 10;
+  pointer-events: none;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.scrollIndicator {
+  display: block;
+  margin-top: 8px;
+  font-size: 16px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: translateY(0); }
+  50% { opacity: 0.8; transform: translateY(4px); }
+}

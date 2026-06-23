@@ -28,3 +28,33 @@
   bottom: auto;
   top: 28px;
 }
+
+@media (max-width: 768px) {
+  .nav {
+    left: 50%;
+    right: auto;
+    bottom: 24px;
+    top: auto;
+    transform: translateX(-50%);
+    background: rgba(8, 0, 0, 0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 14px 28px;
+    border-radius: 40px;
+    gap: 20px;
+    width: max-content;
+    max-width: 90vw;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
+    /* Reset transitions for position to avoid visual jumpiness on swipe */
+    transition: transform 0.3s ease;
+  }
+
+  .atTop {
+    bottom: 24px !important;
+    top: auto !important;
+  }
+}
