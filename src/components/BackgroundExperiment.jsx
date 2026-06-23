@@ -7,8 +7,8 @@ gsap.registerPlugin(ScrollTrigger)
 
 const ROMAN_NUMERALS = ["XII", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"]
 
-// Build a sequence of numerals for 3 full turns (36 total)
-const numeralsList = [...ROMAN_NUMERALS, ...ROMAN_NUMERALS, ...ROMAN_NUMERALS]
+// Build a sequence of numerals for 4 full turns (48 total)
+const numeralsList = [...ROMAN_NUMERALS, ...ROMAN_NUMERALS, ...ROMAN_NUMERALS, ...ROMAN_NUMERALS]
 
 // Helper to generate a gear outline SVG path
 function generateGearPath(cx, cy, teeth, outerR, innerR) {
@@ -68,13 +68,13 @@ export default function BackgroundExperiment() {
   const blob2Ref = useRef(null)
 
   // Logarithmic Spiral Parameters
-  const a = 420 // Starting radius
-  const b = 0.14 // Decay constant
+  const a = 440 // Starting radius (fits viewport nicely)
+  const b = 0.075 // Slower decay constant for much wider spaced loops (Greek sundial vibe)
 
   // Generate points for the spiral path
   const points = []
-  const steps = 240
-  const maxTheta = 6.2 * Math.PI // A bit over 3 full turns
+  const steps = 300
+  const maxTheta = 7.6 * Math.PI // 3.8 turns
   for (let i = 0; i <= steps; i++) {
     const theta = (i / steps) * maxTheta
     const thetaOffset = theta - Math.PI / 2 // Offset by -90deg so XII starts at top
@@ -97,7 +97,7 @@ export default function BackgroundExperiment() {
     const x = r * Math.cos(thetaOffset)
     const y = r * Math.sin(thetaOffset)
     const rotation = idx * 30 // 30deg per clock digit
-    const scale = Math.max(0.12, r / a) * 1.25
+    const scale = 0.45 + 1.2 * (r / a) // numerals stay very large even towards the center
 
     return {
       numeral,
@@ -127,15 +127,9 @@ export default function BackgroundExperiment() {
       duration: 3
     }, 0)
 
-    // 2. Draw the spiral line dynamically
+    // 2. The spiral line is solid and fully visible from the start
     if (spiralPathRef.current) {
-      const length = spiralPathRef.current.getTotalLength()
-      gsap.set(spiralPathRef.current, { strokeDasharray: length, strokeDashoffset: length })
-      tl.to(spiralPathRef.current, {
-        strokeDashoffset: 0,
-        ease: 'power1.inOut',
-        duration: 2.8
-      }, 0)
+      gsap.set(spiralPathRef.current, { opacity: 1 })
     }
 
     // 3. Meshed gear rotations
@@ -279,6 +273,15 @@ export default function BackgroundExperiment() {
           {/* MAIN SPIRALLING CLOCK dial */}
           <g ref={clockGroupRef}>
             
+            {/* Ambient blur path under the main line for thick glowing ribbon effect */}
+            <path 
+              d={spiralPathD} 
+              stroke="rgba(255, 60, 0, 0.4)"
+              strokeWidth={48}
+              fill="none"
+              strokeLinecap="round"
+              style={{ filter: 'blur(16px)' }}
+            />
             {/* The logarithmic spiral path */}
             <path 
               ref={spiralPathRef}

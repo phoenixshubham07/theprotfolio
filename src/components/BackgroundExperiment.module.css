@@ -68,17 +68,19 @@
 
 .spiralLine {
   stroke: url(#spiralGradient);
-  stroke-width: 3;
+  stroke-width: 22px; /* Large thick spiral line matching user image */
   stroke-linecap: round;
   fill: none;
-  filter: drop-shadow(0 0 10px rgba(255, 50, 0, 0.45));
+  filter: drop-shadow(0 0 12px rgba(255, 50, 0, 0.5));
 }
 
 .romanNumeral {
   font-family: 'Instrument Serif', serif;
   font-style: italic;
+  font-weight: 500;
+  font-size: 55px; /* Large, clear text digits */
   fill: #fff;
-  text-shadow: 0 0 12px rgba(255, 80, 0, 0.7);
+  text-shadow: 0 0 12px rgba(255, 80, 0, 0.75), 0 0 24px rgba(255, 0, 0, 0.4);
   user-select: none;
   pointer-events: none;
 }
