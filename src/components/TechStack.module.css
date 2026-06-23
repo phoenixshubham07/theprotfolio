@@ -1,8 +1,10 @@
 .techSection {
+  position: relative;
   background: #080000;
   padding: 80px 0;
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 1;
 }
 
 .marqueeRow {

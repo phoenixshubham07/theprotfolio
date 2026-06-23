@@ -57,7 +57,9 @@ export default function AsciiBackground() {
     function updateCanvasSize() {
       const containerWidth = container.clientWidth || 300;
       const containerHeight = container.clientHeight || 150;
-      const mediaRatio = sourceMedia.videoHeight / sourceMedia.videoWidth;
+      const videoWidth = sourceMedia.videoWidth || 640;
+      const videoHeight = sourceMedia.videoHeight || 360;
+      const mediaRatio = videoHeight / videoWidth;
       
       let width, height;
       if (containerWidth * mediaRatio <= containerHeight) {
@@ -118,9 +120,18 @@ export default function AsciiBackground() {
 
     function generateAsciiArt() {
       const dimensions = updateCanvasSize();
+      if (!dimensions.width || !dimensions.height || isNaN(dimensions.width) || isNaN(dimensions.height)) {
+        return;
+      }
       const columns = Math.round(Math.max(20, (dimensions.width / 1200) * config.detailFactor * 3));
-      const aspectRatio = sourceMedia.videoHeight / sourceMedia.videoWidth;
+      const videoWidth = sourceMedia.videoWidth || 640;
+      const videoHeight = sourceMedia.videoHeight || 360;
+      const aspectRatio = videoHeight / videoWidth;
       const rows = Math.ceil(columns * aspectRatio);
+      
+      if (!columns || !rows || isNaN(columns) || isNaN(rows)) {
+        return;
+      }
       
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = columns;

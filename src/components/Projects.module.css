@@ -24,12 +24,20 @@
   margin: 0;
 }
 
-.sectionPinned {
+.sectionTrigger {
   position: relative;
   width: 100%;
-  height: 100vh; /* Fill exactly one screen */
   background: #080000;
-  z-index: 10;
+  overflow: visible;
+}
+
+.sectionPinned {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  background: #080000;
+  z-index: 20;
   color: #fff;
   overflow: hidden;
 }
@@ -154,14 +162,10 @@
   align-items: center;
   justify-content: center;
   pointer-events: auto;
-  
-  /* Depth of field transitions */
-  filter: blur(0px);
-  transition: filter 0.8s ease-in-out;
 }
 
 .inactiveCardWrapper {
-  filter: blur(16px);
+  /* Let GSAP handle the opacity fade of cards exclusively to prevent CSS transitions from conflicting with GSAP's scroll scrubbing */
 }
 
 /* The actual 3D Card */
@@ -170,8 +174,8 @@
   height: 100%;
   position: relative;
   border-radius: 12px;
-  box-shadow: 0 40px 100px rgba(0,0,0,0.8),
-              0 0 0 1px rgba(255,255,255,0.1);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.4),
+              0 0 0 1px rgba(255,255,255,0.06);
   background: #111;
   will-change: transform;
   display: flex;
@@ -225,7 +229,9 @@
   height: 100%;
   display: flex;
   align-items: center;
-  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  /* Specific transitions to prevent heavy gradient/color transitions */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  will-change: opacity, transform;
 }
 
 .hoverHint span {
@@ -366,7 +372,7 @@
   letter-spacing: 0.1em;
   cursor: pointer;
   z-index: 10;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
   transition: transform 0.2s, background 0.2s;
 }
 
@@ -411,7 +417,7 @@
   padding: 32px;
   max-width: 420px;
   width: 100%;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
   transform: translateZ(50px); /* 3D float inside container */
   text-align: left;
 }
@@ -634,9 +640,13 @@
 }
 
 .ambientIframe {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   border: none;
+  z-index: 1;
 }
 
 .ambientOverlay {
@@ -645,9 +655,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  /* Apply high-contrast blur overlay on top of the unblurred live background iframe */
-  backdrop-filter: blur(12px) saturate(3.2) brightness(1.7) contrast(1.15);
-  -webkit-backdrop-filter: blur(12px) saturate(3.2) brightness(1.7) contrast(1.15);
+  /* Reduced blur overlay to significantly optimize performance during scroll */
+  backdrop-filter: blur(5px) saturate(2.4) brightness(1.4) contrast(1.1);
+  -webkit-backdrop-filter: blur(5px) saturate(2.4) brightness(1.4) contrast(1.1);
   
   /* Softer spotlight gradients to let the colors shine around the central cards */
   background: radial-gradient(circle at center, transparent 40%, rgba(8, 0, 0, 0.65) 100%),
@@ -656,10 +666,14 @@
 }
 
 .ambientImage {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   border: none;
+  z-index: 0;
 }
 
 .projectsIntro {
@@ -714,9 +728,9 @@
   letter-spacing: -0.04em;
   text-transform: uppercase;
   color: #fff;
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   margin: 0 0 20px 0;
-  will-change: opacity, transform, filter;
+  will-change: opacity, transform;
 }
 
 .introSubtitle {
@@ -730,8 +744,8 @@
   max-width: 650px;
   width: 100%;
   margin: 0;
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-  will-change: opacity, filter, transform;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  will-change: opacity, transform;
 }
 
 .introLogoItem {
@@ -777,8 +791,8 @@
   }
 }
 
-/* --- ABSTRACT ALIVE & BREATHING BACKGROUND --- */
-.abstractBg {
+/* --- ANTIKYTHERA ASTROLABE SPIRAL BACKGROUND --- */
+.astrolabeContainer {
   position: absolute;
   top: 0;
   left: 0;
@@ -788,63 +802,228 @@
   background: radial-gradient(circle at center, #0d0101 0%, #040000 100%);
   z-index: 0;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: opacity, transform;
 }
 
-.blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(140px);
-  opacity: 0.12;
-  will-change: transform, opacity, filter;
-  transform: translate3d(0, 0, 0);
-}
-
-.blobCrimson {
-  background: radial-gradient(circle, #ff003c 0%, rgba(255, 0, 85, 0) 70%);
-  width: min(65vw, 750px);
-  height: min(65vw, 750px);
-  top: -15%;
-  left: -15%;
-}
-
-.blobOrange {
-  background: radial-gradient(circle, #ff5100 0%, rgba(255, 81, 0, 0) 70%);
-  width: min(60vw, 650px);
-  height: min(60vw, 650px);
-  bottom: -15%;
-  right: -15%;
-}
-
-.blobGold {
-  background: radial-gradient(circle, #ffaa00 0%, rgba(255, 170, 0, 0) 70%);
-  width: min(50vw, 550px);
-  height: min(50vw, 550px);
-  top: 35%;
-  left: 45%;
-}
-
-.gridOverlay {
+.astrolabeAmbientGlow {
   position: absolute;
   inset: 0;
-  background-image: 
-    linear-gradient(rgba(255, 60, 0, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 60, 0, 0.02) 1px, transparent 1px);
-  background-size: 80px 80px;
-  background-position: center;
-  mask-image: radial-gradient(circle at center, black 10%, transparent 80%);
-  -webkit-mask-image: radial-gradient(circle at center, black 10%, transparent 80%);
-  opacity: 0.45;
-  will-change: transform;
-  transform-origin: center;
+  background: radial-gradient(circle at center, rgba(153, 0, 38, 0.04) 0%, rgba(179, 89, 0, 0.01) 60%, transparent 90%);
+  pointer-events: none;
+  z-index: 0;
 }
 
-.abstractOverlayGlow {
+.astrolabeBlob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.15;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.astrolabeBlobRed {
+  background: radial-gradient(circle, rgba(153, 0, 38, 0.25) 0%, rgba(153, 0, 38, 0) 70%);
+  width: 600px;
+  height: 600px;
+  top: -10%;
+  left: -10%;
+}
+
+.astrolabeBlobOrange {
+  background: radial-gradient(circle, rgba(179, 89, 0, 0.2) 0%, rgba(179, 89, 0, 0) 70%);
+  width: 500px;
+  height: 500px;
+  bottom: -10%;
+  right: -10%;
+}
+
+.astrolabeSvg {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at center, transparent 30%, #040000 95%);
+  width: 100vw;
+  height: 100vh;
+  overflow: visible;
   z-index: 2;
+  will-change: transform;
+}
+
+.spiralLineRed {
+  stroke: #990026;
+  stroke-width: 3.5px;
+  stroke-linecap: round;
+  fill: none;
+  filter: drop-shadow(0 0 4px rgba(153, 0, 38, 0.25));
+}
+
+.spiralLineGold {
+  stroke: #b38000;
+  stroke-width: 3.5px;
+  stroke-linecap: round;
+  fill: none;
+  filter: drop-shadow(0 0 4px rgba(179, 128, 0, 0.25));
+}
+
+.romanNumeral {
+  font-family: 'Instrument Serif', serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 55px;
+  fill: #fffcf0;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
+  user-select: none;
+  pointer-events: none;
+}
+
+.romanNumeralCenter {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  fill: #ff5500;
+  text-shadow: 0 0 20px rgba(255, 85, 0, 0.9);
+  user-select: none;
+  pointer-events: none;
+}
+
+.gear {
+  fill: none;
+  stroke: rgba(255, 60, 0, 0.06);
+  stroke-width: 1.5;
+  will-change: transform;
+}
+
+.ring {
+  fill: none;
+  stroke: rgba(255, 80, 0, 0.04);
+  stroke-width: 1;
+}
+
+.dottedRing {
+  fill: none;
+  stroke: rgba(255, 80, 0, 0.05);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 8;
+  will-change: transform;
+}
+
+.laneBackgroundRed {
+  fill: rgba(153, 0, 38, 0.08);
+  stroke: none;
+  pointer-events: none;
+}
+
+/* --- HARDWARE ACCELERATED COMPOSITOR EMBERS --- */
+.ember {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ff6600 0%, rgba(255, 0, 80, 0.4) 100%);
+  box-shadow: 0 0 8px #ff4500;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  animation: floatEmber var(--duration) linear infinite;
+  animation-delay: var(--delay);
+  will-change: transform, opacity;
+}
+
+@keyframes floatEmber {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate3d(30px, -100vh, 0);
+    opacity: 0;
+  }
+}
+
+/* --- TRANSITION LOADER OVERLAY --- */
+.projectsLoader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.scrollArrow {
+  font-size: 24px;
+  color: #ff5500;
+  animation: arrowBounce 1.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+  text-shadow: 0 0 12px rgba(255, 85, 0, 0.5);
+  will-change: transform;
+}
+
+@keyframes arrowBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+.loaderText {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+}
+
+/* --- IFRAME SKELETON LOADER OVERLAY --- */
+.iframeLoader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: rgba(8, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10;
+  border-radius: 12px;
+  animation: iframeLoaderFadeIn 0.3s ease-out forwards;
+}
+
+.iframeLoaderSpinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  animation: loaderSpin 1s linear infinite;
+}
+
+.iframeLoaderText {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+@keyframes loaderSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes iframeLoaderFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 

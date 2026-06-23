@@ -22,69 +22,73 @@ export default function About() {
 
     if (!section || !bio || !image || !v1Label) return
 
-    // Bio fades in and slides right
-    gsap.set(bio, { opacity: 0, x: -40 })
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top 45%',
-      end:   'top 15%',
-      scrub: 2,
-      onUpdate: self => {
-        gsap.set(bio, {
-          opacity: self.progress,
-          x: -40 + (self.progress * 40)
-        })
-      },
-    })
-
-    // Blur out hero as About enters viewport
-    const hero = document.querySelector('#hero')
-    if (hero) {
+    const ctx = gsap.context(() => {
+      // Bio fades in and slides right
+      gsap.set(bio, { opacity: 0, x: -40 })
       ScrollTrigger.create({
         trigger: section,
-        start: 'top 90%',
-        end:   'top 10%',
-        scrub: 1.2,
+        start: 'top 45%',
+        end:   'top 15%',
+        scrub: 2,
         onUpdate: self => {
-          const blur = self.progress * 16
-          hero.style.filter = blur > 0 ? `blur(${blur}px)` : ''
+          gsap.set(bio, {
+            opacity: self.progress,
+            x: -40 + (self.progress * 40)
+          })
         },
       })
+
+      // Blur out hero as About enters viewport
+      const hero = document.querySelector('#hero')
+      if (hero) {
+        ScrollTrigger.create({
+          trigger: section,
+          start: 'top 90%',
+          end:   'top 10%',
+          scrub: 1.2,
+          onUpdate: self => {
+            const blur = self.progress * 16
+            hero.style.filter = blur > 0 ? `blur(${blur}px)` : ''
+          },
+        })
+      }
+
+      // Parallax effect for the image placeholder
+      // It translates down (y: 120) while the page scrolls up, making it appear "slower"
+      gsap.fromTo(image, 
+        { y: -40 }, // Start slightly higher than normal
+        {
+          y: 160,   // End much lower
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top bottom', // Start parallax when section enters bottom of viewport
+            end: 'bottom top',   // End when section leaves top of viewport
+            scrub: 1.2,          // Smooth catching-up feeling
+          }
+        }
+      )
+
+      // Delayed fade-in for the "V1.0" label
+      gsap.fromTo(v1Label,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: section,
+            start: 'center 40%', // Triggers very late, after all other text has scrolled in
+            end: 'center 10%',   
+            scrub: true
+          }
+        }
+      )
+    })
+
+    return () => {
+      ctx.revert()
     }
-
-    // Parallax effect for the image placeholder
-    // It translates down (y: 120) while the page scrolls up, making it appear "slower"
-    gsap.fromTo(image, 
-      { y: -40 }, // Start slightly higher than normal
-      {
-        y: 160,   // End much lower
-        ease: 'none',
-        scrollTrigger: {
-          trigger: section,
-          start: 'top bottom', // Start parallax when section enters bottom of viewport
-          end: 'bottom top',   // End when section leaves top of viewport
-          scrub: 1.2,          // Smooth catching-up feeling
-        }
-      }
-    )
-
-    // Delayed fade-in for the "V1.0" label
-    gsap.fromTo(v1Label,
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1,
-        y: 0,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: section,
-          start: 'center 40%', // Triggers very late, after all other text has scrolled in
-          end: 'center 10%',   
-          scrub: true
-        }
-      }
-    )
-
-    return () => ScrollTrigger.getAll().forEach(t => t.kill())
   }, [])
 
   return (
